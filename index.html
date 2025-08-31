@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Nối Hoa Quả</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f8ff;
+      text-align: center;
+    }
+    #game {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-gap: 5px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .cell {
+      width: 60px;
+      height: 60px;
+      background-size: cover;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #info {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+    .powerup {
+      margin: 10px;
+      padding: 10px 20px;
+      background: #ff69b4;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>🍓 Nối Hoa Quả 🍇</h1>
+  <div id="info">
+    <div>⏱️ Thời gian: <span id="timer">300</span>s</div>
+    <div>⭐ Điểm: <span id="score">0</span></div>
+    <div>🧩 Màn: <span id="level">1</span>/12</div>
+  </div>
+
+  <div>
+    <button class="powerup" onclick="useBomb()">💣 Bom</button>
+    <button class="powerup" onclick="useHammer()">🔨 Búa</button>
+    <button class="powerup" onclick="useShovel()">🧺 Xẻng</button>
+  </div>
+
+  <div id="game"></div>
+
+  <script>
+    const fruits = ['🍎','🍌','🍇','🍓','🍍','🥝'];
+    const grid = document.getElementById('game');
+    const scoreDisplay = document.getElementById('score');
+    const timerDisplay = document.getElementById('timer');
+    const levelDisplay = document.getElementById('level');
+
+    let score = 0;
+    let level = 1;
+    let time = 300;
+    let cells = [];
+
+    function createGrid() {
+      grid.innerHTML = '';
+      cells = [];
+      for (let i = 0; i < 64; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        const fruit = fruits[Math.floor(Math.random() * fruits.length)];
+        cell.textContent = fruit;
+        cell.dataset.index = i;
+        grid.appendChild(cell);
+        cells.push(cell);
+      }
+    }
+
+    function startTimer() {
+      const interval = setInterval(() => {
+        time--;
+        timerDisplay.textContent = time;
+        if (time <= 0) {
+          clearInterval(interval);
+          nextLevel();
+        }
+      }, 1000);
+    }
+
+    function nextLevel() {
+      if (level < 12) {
+        level++;
+        levelDisplay.textContent = level;
+        time = 300;
+        startTimer();
+        createGrid();
+      } else {
+        alert('🎉 Bạn đã hoàn thành tất cả màn chơi!');
+      }
+    }
+
+    function useBomb() {
+      score += 50;
+      scoreDisplay.textContent = score;
+      alert('💣 Bom đã kích hoạt!');
+    }
+
+    function useHammer() {
+      score += 20;
+      scoreDisplay.textContent = score;
+      alert('🔨 Búa đã đập một ô!');
+    }
+
+    function useShovel() {
+      score += 10;
+      scoreDisplay.textContent = score;
+      alert('🧺 Xẻng đã đổi vị trí!');
+    }
+
+    createGrid();
+    startTimer();
+  </script>
+</body>
+</html>
